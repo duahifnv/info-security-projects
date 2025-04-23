@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import security.rsa.dto.MessageDto;
 
 @Controller
 @RequiredArgsConstructor
@@ -14,9 +15,10 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
     @MessageMapping("/chat")
     @SendTo("/topic/chat")
-    public String sendMessageToChat(Message<String> message) {
+    public MessageDto sendMessageToChat(Message<String> message) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-        log.info("Отправляем в чат сообщение '{}' от пользователя {}", message.getPayload(), accessor.getSessionId());
-        return message.getPayload();
+        String trimmedMessage = message.getPayload().trim();
+        log.info("Отправляем в чат сообщение '{}' от пользователя {}", trimmedMessage, accessor.getSessionId());
+        return new MessageDto(accessor.getSessionId(), trimmedMessage);
     }
 }

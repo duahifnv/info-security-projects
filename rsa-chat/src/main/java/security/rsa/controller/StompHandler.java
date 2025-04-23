@@ -20,12 +20,11 @@ public class StompHandler {
     public void handleDisconnect(SessionDisconnectEvent event) {
         var accessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = accessor.getSessionId();
-        log.info("Клиент отсоединен от веб-сокета. Session ID: {}, Команда отключения: {}",
-                sessionId, accessor.getCommand());
+        log.info("Клиент отсоединен от веб-сокета. Session ID: {}", sessionId);
     }
     @EventListener
     public void handleSessionSubscribe(SessionSubscribeEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        log.info("Клиент {} подписался на: {}", accessor.getSessionId(), accessor.getDestination());
+        log.info("Клиент '{}' подписался на '{}'", accessor.getSessionId(), accessor.getDestination());
     }
 }
