@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Chat</title>
+
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<h1>Чат с RSA шифрованием сообщений</h1>
+
+<div id="messages"></div>
+
+<input type="text" id="messageInput" placeholder="Введите сообщение..." />
+<button onclick="sendMessage()">Отправить</button>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.1.1/bundles/stomp.umd.min.js"></script>
+<script src="socket.js"></script>
+
+</body>
+</html>
