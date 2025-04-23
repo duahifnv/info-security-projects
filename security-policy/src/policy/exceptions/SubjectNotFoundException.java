@@ -1,4 +1,4 @@
-package discretionary;
+package policy.exceptions;
 
 public class SubjectNotFoundException extends RuntimeException {
   public SubjectNotFoundException(String subjectName) {

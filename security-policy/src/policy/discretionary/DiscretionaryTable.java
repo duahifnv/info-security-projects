@@ -1,4 +1,6 @@
-package discretionary;
+package policy.discretionary;
+
+import policy.exceptions.SubjectNotFoundException;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -8,7 +10,7 @@ import java.util.stream.Collectors;
 public class DiscretionaryTable {
     public static final List<String> SUBJECT_NAMES = List.of("Maksim", "Nikolay",
             "Nikita", "Anton", "Kirill");
-    private static final String FILES_FOLDER_PATH = "D:\\DSTU\\DataSecurity\\labs\\security-labs\\discretionary-policy\\files";
+    private static final String FILES_FOLDER_PATH = "D:\\DSTU\\DataSecurity\\labs\\security-labs\\security-policy\\files";
     public static final int OBJECT_COUNT = 6;
     private final Map<String, int[]> discretionaryTable;
 

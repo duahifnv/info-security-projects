@@ -1,4 +1,6 @@
-package discretionary;
+package policy.exceptions;
+
+import policy.discretionary.DiscretionaryTable;
 
 public class AccessDeniedException extends RuntimeException {
   public AccessDeniedException(String subjectName, DiscretionaryTable.AccessType accessType,
