@@ -1,10 +1,11 @@
 const CHAT_SUB_ID = 'sub-0';
 
 let stompSessionId = null
+const rsa = generateRsa();
 
 const stompClient = new StompJs.Client({
-    webSocketFactory: () =>
-        new SockJS('http://localhost:8080/ws'),
+    webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+
     onConnect: () => {
         console.log('STOMP соединение установлено');
 
@@ -16,9 +17,11 @@ const stompClient = new StompJs.Client({
             addStompMessageToBlock(jsonMessage);
         }, { id: CHAT_SUB_ID } );
     },
+
     onStompError: (frame) => {
         console.error('Ошибка STOMP:', frame);
     },
+
     onDisconnect: () => {
         console.log('STOMP соединение закрыто');
     },
