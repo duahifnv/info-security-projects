@@ -1,23 +1,42 @@
 const primeBounds = {'min': 1e3, 'max': 1e6 - 1}
 
+const addUserRsa = (userId, rsa) => {
+    usersRsa[userId] = {
+        'publicKey': BigInt(rsa.publicKey),
+        'module': BigInt(rsa.module)
+    };
+    addContact(userId);
+    printServerLog(`<b>${userId}</b> опубликовал свой публичный ключ: 
+                    (Ключ: <code>${rsa.publicKey}</code>, Модуль: <code>${rsa.module}</code>)`);
+}
+
+const deleteUserRsa = (userId) => {
+    if (!usersRsa[userId]) {
+        console.error(`Не найден пользователь ${userId}`);
+        return;
+    }
+    delete usersRsa[userId]
+    removeContact(userId);
+}
+
 const generateRandomRsa = () => {
     const min = primeBounds.min;
     const max = primeBounds.max;
 
     const p = generateLargePrime(min, max);
     const q = generateLargePrime(min, max);
-    rsaLog(`Сгенерировали P: <code>${p}</code>, Q: <code>${q}</code>`)
+    printRsaLog(`Сгенерировали P: <code>${p}</code>, Q: <code>${q}</code>`)
     return _generateRsa(p, q);
 }
 
 const _generateRsa = (p, q) => {
     const module = p * q;
     const phi = (p - 1) * (q - 1);
-    rsaLog(`Модуль N: <code>${module}</code>, ф(N): <code>${phi}</code>`)
+    printRsaLog(`Модуль N: <code>${module}</code>, ф(N): <code>${phi}</code>`)
     const publicKey = findCoprimeNumber(phi);
-    rsaLog(`Публичный ключ: <code>${publicKey}</code>`)
+    printRsaLog(`Публичный ключ: <code>${publicKey}</code>`)
     const privateKey = modInverseBigInt(publicKey, phi); // (pub * priv) % phi = 1
-    rsaLog(`Секретный ключ: <code>${privateKey}</code>`)
+    printRsaLog(`Секретный ключ: <code>${privateKey}</code>`)
     return {'publicKey': BigInt(publicKey), 'privateKey': BigInt(privateKey), 'module': BigInt(module)}
 }
 

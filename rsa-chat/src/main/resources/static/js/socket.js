@@ -1,7 +1,9 @@
 const CHAT_SUB_ID = 'sub-0';
-const RSA_SUB_ID = 'sub-1';
+const RSA_INIT_SUB_ID = 'sub-1';
+const RSA_PUBLISH_SUB_ID = 'sub-2';
+const USERS_SUB_ID = 'sub-3';
 
-let stompSessionId = null
+let clientSessionId = null
 
 const stompClient = new StompJs.Client({
     webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
@@ -10,17 +12,29 @@ const stompClient = new StompJs.Client({
         console.log('STOMP соединение установлено');
 
         const transportUrl = stompClient.webSocket._transport.url;
-        stompSessionId = transportUrl.split('/').reverse()[1];
+        clientSessionId = transportUrl.split('/').reverse()[1];
 
-        subscribeStomp('/topic/chat', (stompMessage) => {
+        if (!clientSessionId) {
+            console.error('Не удалось получить ID сессии пользователя');
+            return;
+        }
+        setUserId(clientSessionId);
+
+        subscribeStomp('/user/queue/chat', (stompMessage) => {
             const jsonMessage = JSON.parse(stompMessage.body);
             handleEncryptedMessageJson(jsonMessage);
         }, CHAT_SUB_ID);
 
+        subscribeStomp('/user/queue/rsa', (stompMessage) => {
+            const jsonMessage = JSON.parse(stompMessage.body);
+            initUsersRsa(jsonMessage);
+        }, RSA_INIT_SUB_ID);
+        sendStompMessage('/app/users.rsa');
+
         sendStompMessage(
             '/app/rsa',
             JSON.stringify({
-                'issuerId': stompSessionId,
+                'issuerId': clientSessionId,
                 'publicKey': clientRsa.publicKey.toString(),
                 'module': clientRsa.module.toString()
             }),
@@ -29,7 +43,12 @@ const stompClient = new StompJs.Client({
         subscribeStomp('/topic/rsa', (stompMessage) => {
             const jsonMessage = JSON.parse(stompMessage.body);
             handleRsaJson(jsonMessage);
-        }, RSA_SUB_ID);
+        }, RSA_PUBLISH_SUB_ID);
+
+        subscribeStomp('/topic/users.logout', (stompMessage) => {
+            const jsonMessage = JSON.parse(stompMessage.body);
+            handleUserLogoutJson(jsonMessage);
+        }, USERS_SUB_ID);
     },
 
     onStompError: (frame) => {
@@ -38,6 +57,13 @@ const stompClient = new StompJs.Client({
 
     onDisconnect: () => {
         console.log('STOMP соединение закрыто');
+        sendStompMessage(
+            '/topic/users.logout',
+            JSON.stringify({
+                'userId': clientSessionId
+            }),
+        );
+        clientSessionId = null;
     },
     reconnectDelay: 30000 // 30s
 });
@@ -67,31 +93,39 @@ const handleEncryptedMessageJson = (jsonMessage) => {
     const issuerId = jsonMessage['issuerId'];
     const cryptos = jsonMessage['cryptos'];
 
-    const echoFlag = issuerId === stompSessionId;
-    const rsa = echoFlag ? clientRsa : sessionsRsa[issuerId] ?? null;
-    if (rsa === null) {
-        console.error(`Не найден RSA ключ для sessionId: ${issuerId}`);
+    let decryptedMessage;
+    try {
+        decryptedMessage = decryptText(cryptos, clientRsa);
+    } catch (e) {
+        console.error(`Ошибка расшифровки сообщения ${cryptos} от пользователя ${issuerId}: ${e}`);
         return;
     }
-    const decryptedMessage = decryptText(cryptos, rsa);
-
-    const color = echoFlag ? 'darkblue' : 'black';
-    const header = echoFlag ? 'Вы' : issuerId;
-
-    chat(header, decryptedMessage, color);
+    printChatMessage(issuerId, decryptedMessage);
 }
+
+const initUsersRsa = (jsonMessage) => {
+    const updatedUsersRsa = jsonMessage['users'];
+    Object.entries(updatedUsersRsa)
+        .filter(([userId]) => userId !== clientSessionId)
+        .forEach(([userId, rsa]) => {
+            addUserRsa(userId, {
+                'publicKey': rsa.publicKey,
+                'module': rsa.module
+            });
+    });
+};
 
 const handleRsaJson = (jsonMessage) => {
     const issuerId = jsonMessage['issuerId'];
-    const publicKey = jsonMessage['publicKey'];
-    const module = jsonMessage['module'];
-    if (issuerId !== stompSessionId) {
-        sessionsRsa[issuerId] = {
-            'publicKey': BigInt(publicKey),
-            'module': BigInt(module)
-        };
-        console.log(sessionsRsa);
-        serverLog(`Собеседник <b>${issuerId}</b> опубликовал свой публичный ключ: 
-                    (Ключ: <code>${publicKey}</code>, Модуль: <code>${module}</code>)`);
+    if (issuerId !== clientSessionId) {
+        addUserRsa(issuerId, {
+            'publicKey': jsonMessage['publicKey'],
+            'module': jsonMessage['module']
+        });
     }
+}
+
+const handleUserLogoutJson = (jsonMessage) => {
+    const userId = jsonMessage['userId'];
+    deleteUserRsa(userId);
 }

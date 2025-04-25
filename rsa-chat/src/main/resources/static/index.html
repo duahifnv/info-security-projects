@@ -4,25 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSA Chat</title>
-
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
 <h1>Чат с RSA шифрованием сообщений</h1>
+<div id="user-info">
+</div>
+<!-- Навигационная панель для выбора собеседника -->
+<div id="contacts-nav">
+</div>
 
 <div id="data-container">
-    <div class="data-block">
-        <label for="messages"><b>Сообщения</b></label>
-        <div id="messages"></div>
+    <div class="message-block">
+        <label for="messageInput"><b>Сообщения</b></label>
     </div>
-    <div class="data-block">
+    <div class="logs-block">
         <label for="logs"><b>Логи</b></label>
         <div id="logs"></div>
     </div>
 </div>
 
-<input type="text" id="messageInput" placeholder="Введите сообщение..." />
-<button onclick="sendChatInput()">Отправить</button>
+<div class="nav-sender">
+    <input class="input" type="text" id="messageInput" placeholder="Введите сообщение..." disabled />
+    <button class="btn" onclick="sendChatInput()">Отправить</button>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.1.1/bundles/stomp.umd.min.js"></script>

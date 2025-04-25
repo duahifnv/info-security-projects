@@ -3,37 +3,112 @@ body {
     margin: 20px;
 }
 
+button, input[type="submit"], input[type="reset"], input[type="submit"] {
+    all: unset;
+}
+
+button {
+    padding: 10px 20px;
+}
+
 #data-container {
-    width: 90%;
+    width: 100%;
+    height: 50vh;
     display: flex;
     gap: 50px;
 }
 
-.data-block {
+#data-container div {
+    width: 80%;
+}
+
+
+.nav-sender {
+    display: flex;
+    justify-content: space-between;
     width: 50%;
 }
 
-#messages {
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: 300px;
-    overflow-y: auto;
-    margin-bottom: 10px;
+.btn {
+    background-color: #4e4e4e;
+    color: white;
+    border-radius: 5px;
+}
+
+.input {
+    border: 0;
+    border-radius: 5px;
+}
+
+.message {
+    margin: 5px;
+    padding: 8px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.my-message {
+    margin: 5px;
+    padding: 8px;
+    background-color: #d4edda;
+    text-align: right;
+    border-radius: 5px;
 }
 
 #logs {
     border: 1px solid #ccc;
     padding: 10px;
-    height: 300px;
+    width: 100%;
+    height: 100%;
     overflow-y: auto;
     margin-bottom: 10px;
     background-color: #212121;
 }
+
 #messageInput {
-    width: 90%;
+    width: 70%;
     padding: 10px;
     margin-right: 5px;
 }
-button {
-    padding: 10px 20px;
+
+/* Добавляем стили для навигационной панели и вкладок */
+#contacts-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    overflow-x: auto;
 }
+
+.contact-tab {
+    padding: 8px 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.contact-tab:hover {
+    background-color: #e0e0e0;
+}
+
+.contact-tab.active {
+    background-color: #4e4e4e;
+    color: white;
+}
+
+/* Скрываем неактивные контейнеры сообщений */
+.messages-container {
+    display: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.messages-container.active {
+    display: block;
+}
+

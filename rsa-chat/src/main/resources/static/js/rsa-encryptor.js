@@ -1,5 +1,5 @@
 const clientRsa = generateRandomRsa();
-const sessionsRsa = {};
+const usersRsa = {};
 
 const encryptText = (text, publicRsa) => {
     const encoder = new TextEncoder();

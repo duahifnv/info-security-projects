@@ -1,4 +1,4 @@
-package security.rsa;
+package security.rsa.service;
 
 import org.springframework.stereotype.Service;
 
