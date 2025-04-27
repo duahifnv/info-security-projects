@@ -23,7 +23,7 @@ export const InputField = ({ value, onChange, placeholder, onSubmit }) => {
         setInputLog(prev => [...prev, newLog]);
 
         // Обработка сабмита по Enter
-        if (key === 'Enter' && value.trim()) {
+        if (key === 'Enter' && value.trim() && value.length >= 2) {
             handleSubmit();
         }
     };

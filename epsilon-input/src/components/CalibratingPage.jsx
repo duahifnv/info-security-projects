@@ -16,6 +16,12 @@ export const CalibratingPage = () => {
         setInputValue(value);
     };
 
+    const handleEpsilonChange = (e) => {
+        let value = parseInt(e.target.value);
+        value = Math.min(Math.max(value, 0), 1000);
+        setEpsilon(isNaN(value) ? 0 : value);
+    };
+
     const processCalibration = (newHistory) => {
         if (newHistory.length === calibratingTries) {
             const avgCalibSpeedMs = newHistory.reduce(
@@ -89,7 +95,18 @@ export const CalibratingPage = () => {
                         <div className="input-block calib-result">
                             <h3>Результат калибровки:</h3>
                             <p>Средняя скорость: {calibrating.avgSpeedMs} мс/символ</p>
-                            <p>Допустимая погрешность ввода: {calibrating.epsilon} мс/символ</p>
+                            <div className="epsilon-control">
+                                <label htmlFor="epsilon-input">Допустимая погрешность:</label>
+                                <input
+                                    id="epsilon-input"
+                                    type="number"
+                                    min="0"
+                                    max="1000"
+                                    value={epsilon}
+                                    onChange={handleEpsilonChange}
+                                />
+                                <span>мс/символ</span>
+                            </div>
                         </div>
                         <InputHistory data={inputHistory} />
                     </>
