@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/InputField.css';
 
-const InputField = ({ value, onChange, placeholder, onSubmit }) => {
+export const InputField = ({ value, onChange, placeholder, onSubmit }) => {
     const [inputLog, setInputLog] = useState([]);
     const inputRef = useRef(null);
 
@@ -94,5 +94,3 @@ const InputField = ({ value, onChange, placeholder, onSubmit }) => {
         </div>
     );
 };
-
-export default InputField;

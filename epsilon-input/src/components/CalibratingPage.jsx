@@ -1,12 +1,12 @@
-import React from 'react';
-import InputField from './InputField';
-import StatPanel from './StatPanel';
-import '../styles/InputPage.css';
+import { useState } from 'react';
+import { InputField } from './InputField';
+import '../styles/CalibratingPage.css';
+import {CalibrationBlocks} from "./CalibrationBlocks";
 
-
-export const InputPage = () => {
-    const [inputValue, setInputValue] = React.useState('');
-    const [inputStats, setInputStats] = React.useState(null);
+export const CalibratingPage = () => {
+    const [inputValue, setInputValue] = useState('');
+    const [inputStats, setInputStats] = useState(null);
+    const [calibAvgs, setCalibAvgs] = useState([]);
 
     const handleInputChange = (value) => {
         setInputValue(value);
@@ -17,7 +17,14 @@ export const InputPage = () => {
         console.log('Input stats:', result.stats);
         setInputStats(result.stats);
 
-        // Здесь можно добавить дополнительную обработку
+        setCalibAvgs(prev => [
+            ...prev,
+            {
+                id: Date.now(), // Уникальный идентификатор
+                value: result.stats.avgSpeedMs,
+                timestamp: new Date().toLocaleTimeString()
+            }
+        ]);
     };
 
     return (
@@ -31,6 +38,8 @@ export const InputPage = () => {
                     onSubmit={handleSubmit}
                     placeholder="Введите текст..."
                 />
+
+                {calibAvgs.length > 0 && <CalibrationBlocks data={calibAvgs} />}
 
                 {inputStats && (
                     <div className="input-stats">
