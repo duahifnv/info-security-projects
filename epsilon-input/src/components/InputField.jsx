@@ -87,7 +87,7 @@ export const InputField = ({ value, onChange, placeholder, onSubmit }) => {
             <button
                 onClick={handleSubmit}
                 className="submit-button"
-                disabled={!value.trim()}
+                disabled={!value.trim() || value.length < 2}
             >
                 Отправить
             </button>

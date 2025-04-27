@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import { InputField } from './InputField';
 import { InputHistory } from "./InputHistory";
 import '../styles/CalibratingPage.css';
@@ -7,35 +7,54 @@ import '../styles/CalibratingPage.css';
 export const CalibratingPage = () => {
     const [inputValue, setInputValue] = useState('');
     const [inputStats, setInputStats] = useState(null);
-    const [inputHistory, updateInputHistory] = useState([]);
+    const [inputHistory, setInputHistory] = useState([]);
     const [calibrating, setCalibrating] = useState(null);
     const [epsilon, setEpsilon] = useState(50);
+    const calibratingTries = 3;
 
     const handleInputChange = (value) => {
         setInputValue(value);
     };
 
-    const handleSubmit = (result) => {
-        console.log('Submitted text:', result.text);
-        console.log('Input stats:', result.stats);
-        setInputStats(result.stats);
+    const processCalibration = (newHistory) => {
+        if (newHistory.length === calibratingTries) {
+            const avgCalibSpeedMs = newHistory.reduce(
+                (sum, input) => sum + parseFloat(input.value),
+                0
+            ) / calibratingTries;
 
-        updateInputHistory(prevInputs => [
-            ...prevInputs,
-            {
-                id: Date.now(),
-                value: result.stats.avgSpeedMs,
-                timestamp: new Date().toLocaleTimeString()
-            }
-        ]);
-        if (inputHistory.length > 1) {
-            const avgCalibSpeedMs = inputHistory.reduce((a, b) => a.avgSpeedMs + b.avgSpeedMs) / 3;
             setCalibrating({
-                avgSpeedMs: avgCalibSpeedMs,
+                avgSpeedMs: avgCalibSpeedMs.toFixed(2),
                 epsilon: epsilon
             });
+
+            return newHistory.map(input => ({
+                ...input,
+                diff: Math.abs(input.value - avgCalibSpeedMs).toFixed(2)
+            }));
         }
+        return newHistory;
     };
+
+    const handleSubmit = (result) => {
+        setInputHistory(prev => {
+            const diff = calculateDiff(result.stats.avgSpeedMs);
+            const newInput = {
+                id: Date.now(),
+                value: result.stats.avgSpeedMs,
+                diff: diff,
+                failed: diff > epsilon,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            const newHistory = [...prev, newInput];
+            return processCalibration(newHistory);
+        });
+        setInputStats(result.stats);
+    };
+
+    const calculateDiff = (avgSpeedMs) => {
+        return calibrating ? Math.abs(avgSpeedMs - calibrating.avgSpeedMs).toFixed(2) : null;
+    }
 
     return (
         <div className="panel dark-theme">
@@ -53,7 +72,8 @@ export const CalibratingPage = () => {
                 {!calibrating && (
                     <>
                         <div className="input-block calib">
-                            <p>Прогресс калибровки: <span>{(inputHistory.length / 3 * 100).toFixed(1)}%</span> </p>
+                            <p>Прогресс калибровки: <span>{(inputHistory.length / calibratingTries * 100).toFixed(1)}%</span>
+                            </p>
                         </div>
                         {inputStats && (
                             <div className="input-block stat">

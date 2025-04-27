@@ -6,11 +6,16 @@ export const InputHistory = ({ data }) => {
         <div className="history-container">
             <h3>История вводов:</h3>
             <div className="blocks-grid">
-                {data.map((item, index) => (
-                    <div key={item.id} className="input-block">
-                        <div className="block-header">Попытка #{index + 1}</div>
-                        <div className="block-value">{item.value} мс/символ</div>
-                        <div className="block-time">{item.timestamp}</div>
+                {data.map((input, index) => (
+                    <div key={input.id} className={`input-block ${input.failed ? 'failed' : ''}`.trim()}>
+                        <div className={`block-header ${input.failed ? 'failed' : ''}`.trim()}>
+                            Попытка #{index + 1}
+                        </div>
+                        <div className={`block-value ${input.failed ? 'failed' : ''}`.trim()}>
+                            {input.value} мс/символ
+                        </div>
+                        <div className={`block-diff ${input.failed ? 'failed' : ''}`.trim()}>+/- {input.diff} мс</div>
+                        <div className="block-timestamp">{input.timestamp}</div>
                     </div>
                 ))}
             </div>

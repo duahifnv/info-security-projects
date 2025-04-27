@@ -77,6 +77,13 @@
     border-left: 4px solid #4285f4;
 }
 
+.input-block.failed  {
+    background-color: rgba(244, 66, 66, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    border-left: 4px solid #f44242;
+}
+
 .input-block {
     animation: fadeIn 0.3s ease-out forwards;
 }
@@ -108,16 +115,32 @@
     color: #4285f4;
 }
 
+.block-header.failed {
+    color: #f44242;
+}
+
 .block-value {
     font-size: 1.2rem;
     margin: 8px 0;
 }
 
-.block-time {
+.block-diff {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #5f97ff;
+}
+
+.block-diff.failed {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #ff5e5e;
+}
+
+.block-timestamp {
     font-size: 0.8rem;
     color: #666;
 }
 
-.dark-theme .block-time {
+.dark-theme .block-timestamp {
     color: #aaa;
 }
