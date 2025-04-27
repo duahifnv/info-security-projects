@@ -11,6 +11,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import security.rsa.dto.RsaPublic;
 import security.rsa.service.ChatService;
+import security.rsa.service.RsaService;
 
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 @Slf4j
 public class StompHandler {
     private final SimpMessagingTemplate messagingTemplate;
-    private final Map<String, RsaPublic> usersRsa;
+    private final RsaService rsaService;
     private final ChatService chatService;
 
     @EventListener
@@ -31,7 +32,7 @@ public class StompHandler {
     public void handleDisconnect(SessionDisconnectEvent event) {
         var accessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = accessor.getSessionId();
-        usersRsa.remove(sessionId);
+        rsaService.removeUserRsa(sessionId);
 
         String json = chatService.getJson(Map.of("userId", sessionId));
         messagingTemplate.convertAndSend("/topic/users.logout", json);
