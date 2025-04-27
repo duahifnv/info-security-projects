@@ -1,0 +1,64 @@
+/* Базовые стили */
+.panel {
+    border-radius: 10px;
+    padding: 24px;
+    max-width: 800px;
+    margin: 20px auto;
+    transition: all 0.3s ease;
+}
+
+/* Светлая тема (по умолчанию) */
+.panel:not(.dark-theme) {
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+/* Темная тема */
+.panel.dark-theme {
+    background-color: #1e1e2d;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: #e0e0e0;
+}
+
+.panel-title {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.dark-theme .panel-title {
+    color: #f0f0f0;
+}
+
+.panel-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.input-stats {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 20px;
+}
+
+.dark-theme .input-stats {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.input-stats h3 {
+    margin-top: 0;
+    color: #4285f4;
+}
+
+.input-stats p {
+    margin: 8px 0;
+}

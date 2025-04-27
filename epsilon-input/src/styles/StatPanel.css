@@ -1,0 +1,39 @@
+.stat-panel {
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+/* Светлая тема */
+:not(.dark-theme) .stat-panel {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Темная тема */
+.dark-theme .stat-panel {
+    background-color: #2a2a3a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.stat-title {
+    font-size: 14px;
+    margin: 0 0 8px 0;
+    font-weight: 500;
+}
+
+/* Светлая тема */
+:not(.dark-theme) .stat-title {
+    color: #666;
+}
+
+/* Темная тема */
+.dark-theme .stat-title {
+    color: #aaa;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}

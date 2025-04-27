@@ -1,0 +1,25 @@
+*, *::before, *::after {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: "Sofia Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    transition: background-color 0.3s ease;
+}
+
+/* Светлая тема */
+body:not(.dark-theme) {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Темная тема */
+body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+}
