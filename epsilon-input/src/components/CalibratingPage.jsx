@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { InputField } from './InputField';
 import '../styles/CalibratingPage.css';
-import {CalibrationBlocks} from "./CalibrationBlocks";
+import {InputHistory} from "./InputHistory";
 
 export const CalibratingPage = () => {
     const [inputValue, setInputValue] = useState('');
@@ -39,7 +39,7 @@ export const CalibratingPage = () => {
                     placeholder="Введите текст..."
                 />
 
-                {calibAvgs.length > 0 && <CalibrationBlocks data={calibAvgs} />}
+                {calibAvgs.length > 0 && <InputHistory data={calibAvgs} />}
 
                 {inputStats && (
                     <div className="input-stats">

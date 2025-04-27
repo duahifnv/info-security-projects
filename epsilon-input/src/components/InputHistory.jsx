@@ -1,10 +1,10 @@
 import React from 'react';
 import '../styles/CalibrationBlocks.css';
 
-export const CalibrationBlocks = ({ data }) => {
+export const InputHistory = ({ data }) => {
     return (
         <div className="calibration-container">
-            <h3>История калибровок:</h3>
+            <h3>Прошлые вводы:</h3>
             <div className="blocks-grid">
                 {data.map((item, index) => (
                     <div key={item.id} className="calibration-block">
