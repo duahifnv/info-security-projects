@@ -14,19 +14,20 @@
 <div id="contacts-nav">
 </div>
 
-<div id="data-container">
-    <div class="message-block">
-        <label for="messageInput"><b>Сообщения</b></label>
+<div class="main-container">
+    <div id="data-container">
+        <div class="message-block">
+            <p><b>Сообщения</b></p>
+        </div>
+        <div class="logs-block">
+            <p for="logs"><b>Логи</b></p>
+            <div id="logs"></div>
+        </div>
     </div>
-    <div class="logs-block">
-        <label for="logs"><b>Логи</b></label>
-        <div id="logs"></div>
+    <div class="nav-sender">
+        <input class="input" type="text" id="messageInput" placeholder="Введите сообщение..." disabled />
+        <button class="btn" onclick="sendChatInput()">Отправить</button>
     </div>
-</div>
-
-<div class="nav-sender">
-    <input class="input" type="text" id="messageInput" placeholder="Введите сообщение..." disabled />
-    <button class="btn" onclick="sendChatInput()">Отправить</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
