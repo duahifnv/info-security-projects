@@ -112,7 +112,7 @@ const initUsersRsa = (jsonMessage) => {
                 'publicKey': rsa.publicKey,
                 'module': rsa.module
             });
-    });
+        });
 };
 
 const handleRsaJson = (jsonMessage) => {
