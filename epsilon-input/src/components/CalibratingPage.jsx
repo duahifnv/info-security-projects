@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { InputField } from './InputField';
+import { InputHistory } from "./InputHistory";
 import '../styles/CalibratingPage.css';
-import {InputHistory} from "./InputHistory";
+
 
 export const CalibratingPage = () => {
     const [inputValue, setInputValue] = useState('');
     const [inputStats, setInputStats] = useState(null);
-    const [calibAvgs, setCalibAvgs] = useState([]);
+    const [inputHistory, updateInputHistory] = useState([]);
+    const [calibrating, setCalibrating] = useState(null);
+    const [epsilon, setEpsilon] = useState(50);
 
     const handleInputChange = (value) => {
         setInputValue(value);
@@ -17,14 +20,21 @@ export const CalibratingPage = () => {
         console.log('Input stats:', result.stats);
         setInputStats(result.stats);
 
-        setCalibAvgs(prev => [
-            ...prev,
+        updateInputHistory(prevInputs => [
+            ...prevInputs,
             {
-                id: Date.now(), // Уникальный идентификатор
+                id: Date.now(),
                 value: result.stats.avgSpeedMs,
                 timestamp: new Date().toLocaleTimeString()
             }
         ]);
+        if (inputHistory.length > 1) {
+            const avgCalibSpeedMs = inputHistory.reduce((a, b) => a.avgSpeedMs + b.avgSpeedMs) / 3;
+            setCalibrating({
+                avgSpeedMs: avgCalibSpeedMs,
+                epsilon: epsilon
+            });
+        }
     };
 
     return (
@@ -36,18 +46,33 @@ export const CalibratingPage = () => {
                     value={inputValue}
                     onChange={handleInputChange}
                     onSubmit={handleSubmit}
-                    placeholder="Введите текст..."
+                    placeholder={calibrating ?
+                        "Введите текст..." : "Введите фразу 'Мама мыла раму' в своем привычном темпе"}
                 />
 
-                {calibAvgs.length > 0 && <InputHistory data={calibAvgs} />}
-
-                {inputStats && (
-                    <div className="input-stats">
-                        <h3>Статистика ввода:</h3>
-                        <p>Символов: {inputStats.totalChars}</p>
-                        <p>Средняя скорость: {inputStats.avgSpeedMs} мс/символ</p>
-                        <p>Удалений: {inputStats.deleteCount} ({inputStats.deletePercentage}%)</p>
-                    </div>
+                {!calibrating && (
+                    <>
+                        <div className="input-block calib">
+                            <p>Прогресс калибровки: <span>{(inputHistory.length / 3 * 100).toFixed(1)}%</span> </p>
+                        </div>
+                        {inputStats && (
+                            <div className="input-block stat">
+                                <h3>Статистика ввода:</h3>
+                                <p>Символов: {inputStats.totalChars}</p>
+                                <p>Средняя скорость: {inputStats.avgSpeedMs} мс/символ</p>
+                            </div>
+                        )}
+                    </>
+                )}
+                {calibrating && (
+                    <>
+                        <div className="input-block calib-result">
+                            <h3>Результат калибровки:</h3>
+                            <p>Средняя скорость: {calibrating.avgSpeedMs} мс/символ</p>
+                            <p>Допустимая погрешность ввода: {calibrating.epsilon} мс/символ</p>
+                        </div>
+                        <InputHistory data={inputHistory} />
+                    </>
                 )}
             </div>
         </div>
